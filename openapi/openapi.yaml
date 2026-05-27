@@ -1,0 +1,306 @@
+openapi: 3.0.0
+servers:
+  - url: http://localhost:8080
+info:
+  title: Organization structure API
+  version: 1.0.0
+paths:
+  /departments:
+    post:
+      summary: Создание нового подразделения
+      operationId: createDepartment
+      tags:
+        - department
+      requestBody:
+        $ref: "#/components/requestBodies/CreateDepartmentRequest"
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DepartmentOutInfo"
+        "400":
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        "409":
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        "500":
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        default:
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+  /departments/{id}/employees:
+    post:
+      summary: Создание сотрудника
+      operationId: createDepartmentEmployee
+      tags:
+        - department
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор подразделения
+          required: true
+          example: "1"
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeInInfo"
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeSingleInfo"
+        "400":
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        "409":
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        "500":
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        default:
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+
+  /departments/{id}:
+    get:
+      summary: Получение данных подразделения
+      operationId: getDepartment
+      tags:
+        - department
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор подразделения
+          required: true
+          example: "1"
+          schema:
+            type: integer
+            minimum: 1
+        - name: depth
+          in: query
+          description: Глубина вложенных подразделений в ответе (рекурсивно)
+          schema:
+            type: integer
+            default: 1
+            maximum: 5
+            minimum: 1
+        - name: include_employees
+          in: query
+          description: Флаг получения данных сотрудников подразделения
+          schema:
+            type: boolean
+            default: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DepartmentSingleInfo"
+        '400':
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        '500':
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        default:
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+
+    patch:
+      summary: Изменение данных подразделения
+      operationId: updateDepartment
+      tags:
+        - department
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор подразделения
+          required: true
+          example: "1"
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DepartmentUpdateInfo"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DepartmentSingleInfo"
+        "400":
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        "404":
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        "500":
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        default:
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+    delete:
+      summary: Удаление данных подразделения
+      operationId: deleteDepartment
+      tags:
+        - department
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор подразделения
+          required: true
+          example: "1"
+          schema:
+            type: integer
+            minimum: 1
+        - name: mode
+          in: query
+          description: Режим удаления. При режиме "cascade" происходим жесткое удаление подразделения / дочерних подразделений / сотрудников.
+            При режиме "reassign" происходит мягкое удаление подраздение с переносом всех сотрудников в подразделение reassign_to_department_id
+          required: true
+          example: cascade
+          schema:
+            type: string
+            enum: [ "cascade", "reassign" ]
+        - name: reassign_to_department_id
+          in: query
+          description: Идентификатор подразделения для переноса сотрудников. Обязательно если выбран режим "reassign"
+          required: false
+          example: "1"
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Department is deleted
+        "400":
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        "404":
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        "500":
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+        default:
+          $ref: "common.yaml#/components/responses/ApiErrorResponse"
+components:
+  requestBodies:
+    CreateDepartmentRequest:
+      description: Данные для создания подразделения
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DepartmentInInfo"
+  schemas:
+    DepartmentOutInfo:
+      type: object
+      description: Краткая информация о подразделении
+      properties:
+        Id:
+          type: integer
+          description: "Идентификатор подразделения"
+          example: "1"
+          minimum: 1
+        Name:
+          type: string
+          description: "Наименование подразделения"
+        CreatedAt:
+          type: string
+          example: "31-12-2025"
+          description: "Дата создания подразделения в формате ЧЧ-ММ-ГГГГ"
+    EmployeeSingleInfo:
+      type: object
+      description: Информация о сотруднике подразделения
+      required:
+        - Id
+        - FullName
+        - Position
+        - CreatedAt
+      properties:
+        Id:
+          type: integer
+          description: "Идентификатор сотрудника"
+          example: "1"
+          minimum: 1
+        FullName:
+          type: string
+          description: "Имя"
+        Position:
+          type: string
+          description: "Должность"
+        HiredAt:
+          type: string
+          example: "31-12-2025"
+          description: "Дата приема сотрудника в формате ЧЧ-ММ-ГГГГ"
+        CreatedAt:
+          type: string
+          example: "31-12-2025"
+          description: "Дата создания сотрудника в формате ЧЧ-ММ-ГГГГ"
+    DepartmentSingleInfo:
+      description: Информация о конкретном подразделении
+      type: object
+      properties:
+        Department:
+          $ref: '#/components/schemas/DepartmentOutInfo'
+        Employees:
+          description: Сотрудники подразделения
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeeSingleInfo'
+        Children:
+          description: Список дочерних подразделений
+          type: array
+          items:
+            $ref: '#/components/schemas/DepartmentOutInfo'
+    DepartmentInInfo:
+      type: object
+      required:
+        - Name
+      properties:
+        Name:
+          type: string
+          example: "Отдел"
+          maximum: 200
+          minimum: 1
+          description: "Наименование подразделения. Уникально в рамках родительского подразделения"
+        ParentId:
+          type: integer
+          example: "1"
+          description: "Идентификатор родительского подразделения. Для подразделения верхнего уровня (parent_id = null) поле не требуется"
+    EmployeeInInfo:
+      type: object
+      required:
+        - FullName
+        - Position
+      properties:
+        FullName:
+          type: string
+          example: "Имя"
+          maximum: 200
+          minimum: 1
+          description: "Полное имя сотрудника"
+        Position:
+          type: string
+          example: "Имя"
+          maximum: 200
+          minimum: 1
+          description: "Должность"
+        HiredAt:
+          example: "31-12-2025"
+          type: string
+          description: "Дата приема в формате ЧЧ-ММ-ГГГГ"
+    DepartmentUpdateInfo:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: "Отдел"
+          maximum: 200
+          minimum: 1
+          description: "Наименование подразделения. Уникально в рамках родительского подразделения"
+        ParentId:
+          type: integer
+          example: "1"
+          description: "Идентификатор родительского подразделения. Для переноса в верхний уровень (parent_id = null) поле не требуется"
+

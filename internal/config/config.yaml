@@ -1,0 +1,11 @@
+db:
+  host: postgres_storage
+  port: 5432
+  user: postgres
+  password: 12345678
+  name: organization_structure
+  sslmode: disable
+server:
+  port: 8080
+log:
+  level: INFO
