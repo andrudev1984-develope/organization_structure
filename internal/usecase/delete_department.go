@@ -42,6 +42,13 @@ func (useCase *UseCase) DeleteDepartment(ctx context.Context, id string, mode st
 			}
 		}
 
+		if v == pId {
+			return &out.CustomError{
+				Code:    400,
+				Message: "Reassign_to_department_id value cannot be the same value as delete id",
+			}
+		}
+
 		preassignToDepartmentId = new(uint(v))
 	}
 

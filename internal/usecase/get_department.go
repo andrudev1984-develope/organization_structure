@@ -63,6 +63,7 @@ func (useCase *UseCase) GetDepartment(ctx context.Context, id string, depth stri
 	var info out.DepartmentSingleInfo
 
 	info.Department.Id = dep.Id
+	info.Department.ParentId = dep.ParentID
 	info.Department.Name = dep.Name
 	info.Department.CreatedAt = dep.CreatedAt.Format("02-01-2006")
 
@@ -83,6 +84,7 @@ func (useCase *UseCase) GetDepartment(ctx context.Context, id string, depth stri
 	for _, d := range dep.Children {
 		do := out.Department{
 			Id:        d.Id,
+			ParentId:  d.ParentID,
 			CreatedAt: d.CreatedAt.Format("02-01-2006"),
 			Name:      d.Name,
 		}

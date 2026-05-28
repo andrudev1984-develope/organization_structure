@@ -46,10 +46,17 @@ func TestDeleteDepartmentUseCase(test *testing.T) {
 			isError:                true,
 		},
 		{
-			caseName:               "Success",
+			caseName:               "ReassignToDepartmentId is delete id error",
 			id:                     "1",
 			mode:                   "reassign",
 			reassignToDepartmentId: new("1"),
+			isError:                true,
+		},
+		{
+			caseName:               "Success",
+			id:                     "1",
+			mode:                   "reassign",
+			reassignToDepartmentId: new("2"),
 			isError:                false,
 		},
 	}

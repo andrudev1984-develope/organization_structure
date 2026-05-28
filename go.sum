@@ -13,6 +13,8 @@ github.com/go-openapi/runtime/server-middleware v0.31.0 h1:zKh3KY+WJwuNd+hxbOs2Z
 github.com/go-openapi/runtime/server-middleware v0.31.0/go.mod h1:OYNT/TxNvB/VK5oe4htM2jDTwlEXuejVJmu0DVZfAMs=
 github.com/go-openapi/runtime/server-middleware v0.32.1 h1:HCtsghA5YuJEJwne3wQj8agMkEgg1iWbJjZw7Qdvu8g=
 github.com/go-openapi/runtime/server-middleware v0.32.1/go.mod h1:fYPep4GdTwg/XqZUjR40uIM/8C12Ba5M+MrGCiwpTHo=
+github.com/go-openapi/runtime/server-middleware v0.32.2 h1:fuWQmduxHbEjBuRkQ3c7pI5YKSuPCJ2RHeZafceo2yw=
+github.com/go-openapi/runtime/server-middleware v0.32.2/go.mod h1:fYPep4GdTwg/XqZUjR40uIM/8C12Ba5M+MrGCiwpTHo=
 github.com/go-openapi/testify/v2 v2.5.0 h1:UOCr63aAsMIDydZbZGqo5Ev01D4eydItRbekDuZMJLw=
 github.com/go-openapi/testify/v2 v2.5.0/go.mod h1:SgsVHtfooshd0tublTtJ50FPKhujf47YRqauXXOUxfw=
 github.com/go-openapi/testify/v2 v2.5.1 h1:TMdhCaw8fUNraVSf3Omoob1dO/AzBfhtFAPW0an6sBo=

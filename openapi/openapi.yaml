@@ -202,6 +202,10 @@ components:
           description: "Идентификатор подразделения"
           example: "1"
           minimum: 1
+        ParentId:
+          type: integer
+          description: "Идентификатор родительского подразделения"
+          example: "1"
         Name:
           type: string
           description: "Наименование подразделения"
@@ -255,6 +259,7 @@ components:
             $ref: '#/components/schemas/DepartmentOutInfo'
     DepartmentInInfo:
       type: object
+      description: Данные для создания подразделения
       required:
         - Name
       properties:
@@ -270,6 +275,7 @@ components:
           description: "Идентификатор родительского подразделения. Для подразделения верхнего уровня (parent_id = null) поле не требуется"
     EmployeeInInfo:
       type: object
+      description: Данные для создания сотрудника
       required:
         - FullName
         - Position
@@ -292,6 +298,7 @@ components:
           description: "Дата приема в формате ЧЧ-ММ-ГГГГ"
     DepartmentUpdateInfo:
       type: object
+      description: Данные для обновления подразделения
       properties:
         Name:
           type: string

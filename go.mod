@@ -3,7 +3,7 @@ module organization_structure
 require (
 	github.com/go-chi/chi/v5 v5.3.0
 	github.com/go-chi/cors v1.2.2
-	github.com/go-openapi/runtime/server-middleware v0.32.1
+	github.com/go-openapi/runtime/server-middleware v0.32.2
 	github.com/stretchr/testify v1.11.1
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/datatypes v1.2.7

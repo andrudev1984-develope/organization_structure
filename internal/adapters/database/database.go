@@ -31,7 +31,7 @@ const (
 )
 
 func (s PgStorage) CreateDepartment(ctx context.Context, name string, parentId *uint) (*model.Department, error) {
-	d := model.Department{
+	dep := model.Department{
 		ParentID: parentId,
 		Name:     name,
 	}
@@ -48,20 +48,23 @@ func (s PgStorage) CreateDepartment(ctx context.Context, name string, parentId *
 		}
 	}
 
-	err := gorm.G[model.Department](s.adapter).Create(ctx, &d)
+	err := gorm.G[model.Department](s.adapter).Create(ctx, &dep)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &d, nil
+	return &dep, nil
 }
 
 func (s PgStorage) GetDepartment(ctx context.Context, departmentId uint, depth int, includeEmployees bool) (*model.Department, error) {
 	pre := gorm.G[model.Department](s.adapter).Where("id=?", departmentId)
 
 	if includeEmployees {
-		pre = pre.Preload("Employees", nil)
+		pre = pre.Preload("Employees", func(db gorm.PreloadBuilder) error {
+			db.Order("employees.full_name DESC")
+			return nil
+		})
 	}
 
 	dep, err := pre.First(ctx)
@@ -199,7 +202,7 @@ func (s PgStorage) DeleteDepartment(ctx context.Context, departmentId uint, mode
 }
 
 func (s PgStorage) CreateEmployee(ctx context.Context, fullName string, departmentId uint, position string, hiredAt *time.Time) (*model.Employee, error) {
-	e := model.Employee{
+	emp := model.Employee{
 		DepartmentID: departmentId,
 		FullName:     fullName,
 		Position:     position,
@@ -216,13 +219,13 @@ func (s PgStorage) CreateEmployee(ctx context.Context, fullName string, departme
 		return nil, err
 	}
 
-	err = gorm.G[model.Employee](s.adapter).Create(ctx, &e)
+	err = gorm.G[model.Employee](s.adapter).Create(ctx, &emp)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &e, nil
+	return &emp, nil
 }
 
 func NewPgStorage(adapter *gorm.DB) *PgStorage {

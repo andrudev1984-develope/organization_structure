@@ -25,6 +25,7 @@ func (useCase *UseCase) CreateDepartment(ctx context.Context, in in.CreateDepart
 	return out.Department{
 		Id:        dep.Id,
 		Name:      dep.Name,
+		ParentId:  in.ParentId,
 		CreatedAt: dep.CreatedAt.Format("02-01-2006"),
 	}, nil
 }

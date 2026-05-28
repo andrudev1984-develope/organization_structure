@@ -2,6 +2,7 @@ package out
 
 type Department struct {
 	Id        uint
+	ParentId  *uint
 	Name      string
 	CreatedAt string
 }
