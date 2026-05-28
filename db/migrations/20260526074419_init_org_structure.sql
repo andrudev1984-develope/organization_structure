@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS departments
 );
 
 CREATE UNIQUE INDEX parent_name_uq ON departments (COALESCE(parent_id, '-1'), name);
+CREATE INDEX departments_parent_id_idx ON departments USING btree (parent_id);
 
 -- Table: employee
 
@@ -27,6 +28,8 @@ CREATE TABLE IF NOT EXISTS employees
     CONSTRAINT employee_full_name_not_empty CHECK (length(trim(full_name)) > 0),
     CONSTRAINT employee_position_not_empty CHECK (length(trim(position)) > 0)
 );
+
+CREATE INDEX employees_department_id_idx ON employees USING btree (department_id);
 
 ALTER TABLE IF EXISTS departments OWNER to postgres;
 ALTER TABLE IF EXISTS employees OWNER to postgres;
