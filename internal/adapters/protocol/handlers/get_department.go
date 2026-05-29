@@ -5,23 +5,15 @@ import (
 	"net/http"
 	"organization_structure/internal/model/out"
 	"organization_structure/internal/usecase"
-	"strconv"
 
 	"github.com/go-chi/chi/v5"
 )
 
-func HGetDepartment(s *usecase.UseCase) func(w http.ResponseWriter, r *http.Request) {
+func HGetDepartment(s usecase.IUSeCase) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var depId = chi.URLParam(r, "id")
 		var depth = r.URL.Query().Get("depth")
 		var includeEmployees = r.URL.Query().Get("include_employees")
-
-		_, err := strconv.Atoi(depId)
-
-		if err != nil {
-			sendError(w, 400, err.Error(), nil)
-			return
-		}
 
 		dep, err := s.GetDepartment(r.Context(), depId, depth, includeEmployees)
 

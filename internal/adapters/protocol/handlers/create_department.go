@@ -9,7 +9,7 @@ import (
 	"organization_structure/internal/usecase"
 )
 
-func HCreateDepartment(s *usecase.UseCase) func(w http.ResponseWriter, r *http.Request) {
+func HCreateDepartment(s usecase.IUSeCase) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var content in.CreateDepartment
 

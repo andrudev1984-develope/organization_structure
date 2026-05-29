@@ -9,13 +9,13 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func HDeleteDepartment(s *usecase.UseCase) func(w http.ResponseWriter, r *http.Request) {
+func HDeleteDepartment(s usecase.IUSeCase) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var id = chi.URLParam(r, "id")
 		var mode = r.URL.Query().Get("mode")
-		var reassign_to_department_id = r.URL.Query().Get("reassign_to_department_id")
+		var reassignToDepartmentId = r.URL.Query().Get("reassign_to_department_id")
 
-		err := s.DeleteDepartment(r.Context(), id, mode, new(reassign_to_department_id))
+		err := s.DeleteDepartment(r.Context(), id, mode, new(reassignToDepartmentId))
 
 		if err != nil {
 			sErr, ok := errors.AsType[*out.CustomError](err)

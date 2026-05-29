@@ -11,7 +11,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func HUpdateDepartment(s *usecase.UseCase) func(w http.ResponseWriter, r *http.Request) {
+func HUpdateDepartment(s usecase.IUSeCase) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var content in.UpdateDepartment
 		var depId = chi.URLParam(r, "id")

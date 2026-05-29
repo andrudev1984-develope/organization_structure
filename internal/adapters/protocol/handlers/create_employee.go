@@ -11,7 +11,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func HCreateEmployee(s *usecase.UseCase) func(w http.ResponseWriter, r *http.Request) {
+func HCreateEmployee(s usecase.IUSeCase) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var content in.CreateEmployee
 
