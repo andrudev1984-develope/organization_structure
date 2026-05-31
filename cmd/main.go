@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"organization_structure/internal/adapters/database"
+	"organization_structure/internal/adapters/orm"
 	"organization_structure/internal/adapters/protocol"
 	appconfig "organization_structure/internal/config"
 	"organization_structure/internal/logging"
@@ -14,10 +14,6 @@ import (
 	"strconv"
 	"syscall"
 	"time"
-
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 func main() {
@@ -28,7 +24,7 @@ func main() {
 
 	logging.InitLogger(&config)
 
-	db := setupDatabase(config)
+	db := orm.SetupDatabase(config)
 	p := database.NewPgStorage(db)
 	u := usecase.NewUseCase(p)
 	r := protocol.NewRouter(u)
@@ -60,31 +56,4 @@ func main() {
 	if err := sqlDB.Close(); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func setupDatabase(config appconfig.Config) *gorm.DB {
-	var attempts = 5
-	var delay = 2 * time.Second
-
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=%s",
-		config.Db.Host, config.Db.User, config.Db.Password, config.Db.Name, config.Db.Port, config.Db.SslMode)
-
-	for i := 0; i < attempts; i++ {
-		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Info),
-			SkipDefaultTransaction: true})
-
-		if err == nil {
-			sqlDB, _ := db.DB()
-
-			sqlDB.SetMaxIdleConns(10)
-			sqlDB.SetMaxOpenConns(100)
-			sqlDB.SetConnMaxLifetime(time.Minute * 5)
-
-			return db
-		}
-
-		time.Sleep(delay)
-	}
-
-	panic("failed to connect to database")
 }

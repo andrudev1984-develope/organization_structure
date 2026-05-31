@@ -4,10 +4,13 @@
 - db/migrations - миграции БД сервиса
 - openapi/openapi.yaml - OpenApi спецификация
 - docker-compose.yaml - Docker compose для локального запуска сервиса (запускаются контейнеры с БД / миграций БД / серверной частью сервиса)
+- docker-compose-test.yaml - Docker compose для локального запуска контейнеров для тестов (плюс интеграционный с БД)
 - internal - основной код (http адаптеры, поддержка БД, модели данных, бизнес логика)
 
 ## Запуск
 - Выполнить команду "docker compose up" в корне проекта
+## Запуск тестов
+- Выполнить команду "docker-compose -f docker-compose-test.yaml up -d --build" в корне проекта
 ### HTTP ручки будут доступны по адресам вида: http://localhost:8080/departments
 ### Интерфейс Swagger UI с описаниями ручек доступен по адресу: http://localhost:8080/docs
 

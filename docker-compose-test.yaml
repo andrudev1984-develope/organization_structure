@@ -1,0 +1,36 @@
+volumes:
+  postgres_storage_test: {}
+services:
+  postgres_storage_test:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: "organization_structure"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "12345678"
+    volumes:
+      - postgres_storage_test:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+  migrations:
+    image: ghcr.io/kukymbr/goose-docker:3.22.1
+    restart: on-failure
+    environment:
+      - GOOSE_DRIVER=postgres
+      - GOOSE_DBSTRING=host=postgres_storage_test port=5432 user=postgres password=12345678 dbname=organization_structure
+    volumes:
+      - ./db/migrations:/migrations
+    links:
+      - postgres_storage_test
+    depends_on:
+      - postgres_storage_test
+  web:
+    build:
+      dockerfile: ./Dockerfile_test
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres_storage_test
+      - migrations
+    links:
+      - postgres_storage_test
+

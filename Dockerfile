@@ -10,7 +10,6 @@ RUN go mod download
 
 COPY . .
 
-RUN go test ./...
 RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd/main.go
 
 # Running
